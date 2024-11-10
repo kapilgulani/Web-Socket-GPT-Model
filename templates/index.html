@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Client UI</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        button {
+            display: block;
+            width: 200px;
+            margin: 20px auto;
+            padding: 10px 15px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #3498db;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #results {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            min-height: 100px;
+        }
+        #results p {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-radius: 3px;
+        }
+    </style>
+    <script>
+        function startCommunication() {
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "<p>Starting communication...</p>";
+
+            fetch('http://localhost:4000/start')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    resultsDiv.innerHTML = ""; // Clear the initial message
+                    data.forEach((message) => {
+                        const p = document.createElement("p");
+                        p.textContent = message;
+                        resultsDiv.appendChild(p);
+                    });
+                })
+                .catch(error => {
+                    resultsDiv.innerHTML = "<p>Error: " + error.message + "</p>";
+                });
+        }
+    </script>
+</head>
+<body>
+    <h1>WebSocket Client UI</h1>
+    <button onclick="startCommunication()">Start Communication</button>
+    <div id="results"></div>
+</body>
+</html>
